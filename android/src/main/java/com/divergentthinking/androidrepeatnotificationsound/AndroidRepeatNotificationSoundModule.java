@@ -29,7 +29,7 @@ public class AndroidRepeatNotificationSoundModule extends ReactContextBaseJavaMo
     }
 
     @ReactMethod
-    public void createRepeatNotificationWithRepeatSound(String title, String message) {
+    public void createRepeatNotificationWithRepeatSound(String title, String message, String channelID) {
         String packageName = reactContext.getPackageName();
         Intent launchIntent = reactContext.getPackageManager().getLaunchIntentForPackage(packageName);
         int iconResId = getAppResourceId("ic_stat_ic_notification", "drawable");
@@ -41,14 +41,13 @@ public class AndroidRepeatNotificationSoundModule extends ReactContextBaseJavaMo
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pIntent = PendingIntent.getActivity(reactContext, 0, activityIntent, 0);
-            Notification n  = new Notification.Builder(this.reactContext)
+            Notification n  = new Notification.Builder(this.reactContext, channelID)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setContentIntent(pIntent)
                     .setSmallIcon(iconResId)
-                    .setAutoCancel(true).build();
-            n.defaults |= Notification.DEFAULT_VIBRATE;
-            n.defaults |= Notification.DEFAULT_SOUND;
+                    .setAutoCancel(true)
+                    .build();
             n.flags = Notification.FLAG_INSISTENT;
             NotificationManager notificationManager = (NotificationManager) reactContext.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, n);
