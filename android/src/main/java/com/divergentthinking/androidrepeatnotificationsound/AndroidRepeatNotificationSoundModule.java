@@ -32,6 +32,7 @@ public class AndroidRepeatNotificationSoundModule extends ReactContextBaseJavaMo
     public void createRepeatNotificationWithRepeatSound(String title, String message) {
         String packageName = reactContext.getPackageName();
         Intent launchIntent = reactContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        int iconResId = getAppResourceId("ic_stat_ic_notification", "drawable");
         try {
             String className = launchIntent.getComponent().getClassName();
             Class<?> activityClass = Class.forName(className);
@@ -44,6 +45,7 @@ public class AndroidRepeatNotificationSoundModule extends ReactContextBaseJavaMo
                     .setContentTitle(title)
                     .setContentText(message)
                     .setContentIntent(pIntent)
+                    .setSmallIcon(iconResId)
                     .setAutoCancel(true).build();
             n.defaults |= Notification.DEFAULT_VIBRATE;
             n.defaults |= Notification.DEFAULT_SOUND;
@@ -54,5 +56,8 @@ public class AndroidRepeatNotificationSoundModule extends ReactContextBaseJavaMo
             Log.e(LOG_TAG, "Error Send Notification", e);
             return;
         }
+    }
+    private int getAppResourceId(String resName, String resType) {
+        return reactContext.getResources().getIdentifier(resName, resType, reactContext.getPackageName());
     }
  }
